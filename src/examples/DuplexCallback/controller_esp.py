@@ -1,7 +1,7 @@
 from machine import Pin, SPI, reset
 import config_lora
-import controller 
- 
+from sx127x import controller
+
 
 class Controller(controller.Controller):
 
