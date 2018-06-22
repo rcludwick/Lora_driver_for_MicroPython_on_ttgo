@@ -1,8 +1,8 @@
-import controller_esp
-import display_ssd1306_i2c
+from sx127x.controller import esp_controller
+from display import display_ssd1306_i2c
  
 
-class Controller(controller_esp.Controller, display_ssd1306_i2c.Display):
+class TTGOController(esp_controller.ESP32Controller, display_ssd1306_i2c.Display):
 
     # LoRa config
     PIN_ID_FOR_LORA_RESET = 14
@@ -47,11 +47,11 @@ class Controller(controller_esp.Controller, display_ssd1306_i2c.Display):
                  scl_pin_id = PIN_ID_SCL, sda_pin_id = PIN_ID_SDA, 
                  freq = OLED_I2C_FREQ):
                  
-        controller_esp.Controller.__init__(self,
-                                           pin_id_led,
-                                           on_board_led_high_is_on,
-                                           pin_id_reset,
-                                           blink_on_start)
+        super().__init__(self,
+                           pin_id_led,
+                           on_board_led_high_is_on,
+                           pin_id_reset,
+                           blink_on_start)
                                            
         self.reset_pin(self.prepare_pin(self.PIN_ID_FOR_OLED_RESET))        
         display_ssd1306_i2c.Display.__init__(self, 
