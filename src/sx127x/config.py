@@ -61,12 +61,15 @@ class Configuration:
             # Controller
             self.SOFT_SPI = None
             if self.IS_TTGO_LORA_OLED:
-                from sx127x.controller.controller_esp_ttgo_lora_oled import Controller
+                from sx127x.controller.controller_esp_ttgo_lora_oled import TTGOController
                 self.SOFT_SPI = True
-                self.CONTROLLER = Controller
+                self.CONTROLLER = TTGOController
             elif self.IS_ESP32:
                 from sx127x.controller.esp_controller import ESP32Controller
                 self.CONTROLLER = ESP32Controller
+            elif self.IS_ESP8266:
+                from sx127x.controller.esp_controller import ESP8266Controller
+                self.CONTROLLER = ESP8266Controller
 
         if self.IS_RPI:
 
