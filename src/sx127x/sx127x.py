@@ -1,6 +1,6 @@
 from time import sleep 
 import gc
-import config_lora
+from configuration import CONFIG
 
 
 PA_OUTPUT_RFO_PIN = 0
@@ -88,8 +88,9 @@ class SX127x:
         self._lock = False
         
      
-    def init(self, parameters = None):
-        if parameters: self.parameters = parameters
+    def init(self, **parameters):
+        if parameters:
+            self.parameters = parameters
             
         # check version
         version = self.readRegister(REG_VERSION)
@@ -172,7 +173,7 @@ class SX127x:
 
         
     def aquire_lock(self, lock = False):        
-        if not config_lora.IS_MICROPYTHON:  # MicroPython is single threaded, doesn't need lock.
+        if not CONFIG.IS_MICROPYTHON:  # MicroPython is single threaded, doesn't need lock.
             if lock:
                 while self._lock: pass
                 self._lock = True
@@ -388,6 +389,6 @@ class SX127x:
 
     def collect_garbage(self):
         gc.collect()
-        if config_lora.IS_MICROPYTHON:
+        if CONFIG.IS_MICROPYTHON:
             print('[Memory - free: {}   allocated: {}]'.format(gc.mem_free(), gc.mem_alloc()))
             
