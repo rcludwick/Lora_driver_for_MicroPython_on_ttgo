@@ -1,6 +1,6 @@
 from time import sleep 
 import gc
-from configuration import CONFIG
+from sx127x.config import CONFIG
 
 
 PA_OUTPUT_RFO_PIN = 0

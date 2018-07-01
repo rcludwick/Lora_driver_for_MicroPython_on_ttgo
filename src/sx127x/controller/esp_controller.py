@@ -1,24 +1,24 @@
 from machine import Pin, SPI, reset
 
-from sx127x.config import CONFIG
+from sx127x import config
 from sx127x.controller import base_controller
 
 class ESPController(base_controller.BaseController):
 
     # LoRa config
-    PIN_ID_FOR_LORA_RESET = 4
+    LORA_RESET = 4
 
-    PIN_ID_FOR_LORA_SS = 15
-    PIN_ID_SCK = 14
-    PIN_ID_MOSI = 13
-    PIN_ID_MISO = 12
+    LORA_CS = 15
+    LORA_SCK = 14
+    LORA_MOSI = 13
+    LORA_MISO = 12
 
-    PIN_ID_FOR_LORA_DIO0 = 5
-    PIN_ID_FOR_LORA_DIO1 = None
-    PIN_ID_FOR_LORA_DIO2 = None
-    PIN_ID_FOR_LORA_DIO3 = None
-    PIN_ID_FOR_LORA_DIO4 = None
-    PIN_ID_FOR_LORA_DIO5 = None
+    PIN_ID_FOR_LORA_DI01 = 5
+    LORA_DIO1 = None
+    LORA_DIO2 = None
+    LORA_DIO3 = None
+    LORA_DIO4 = None
+    LORA_DIO5 = None
 
 
     def __init__(self, *args, **kwargs):
@@ -78,19 +78,19 @@ class ESPController(base_controller.BaseController):
 class ESP32Controller(ESPController):
 
     # LoRa config
-    PIN_ID_FOR_LORA_RESET = 4 
+    LORA_RESET = 4
 
-    PIN_ID_FOR_LORA_SS = 15
-    PIN_ID_SCK = 14 
-    PIN_ID_MOSI = 13 
-    PIN_ID_MISO = 12 
+    LORA_CS = 15
+    LORA_SCK = 14
+    LORA_MOSI = 13
+    LORA_MISO = 12
 
-    PIN_ID_FOR_LORA_DIO0 = 5 
-    PIN_ID_FOR_LORA_DIO1 = None 
-    PIN_ID_FOR_LORA_DIO2 = None 
-    PIN_ID_FOR_LORA_DIO3 = None
-    PIN_ID_FOR_LORA_DIO4 = None
-    PIN_ID_FOR_LORA_DIO5 = None  
+    LORA_DIO0 = 5
+    LORA_DIO1 = None
+    LORA_DIO2 = None
+    LORA_DIO3 = None
+    LORA_DIO4 = None
+    LORA_DIO5 = None
     
     
 
@@ -104,7 +104,7 @@ class ESP32Controller(ESPController):
     def __init__(self,   
                  pin_id_led = ON_BOARD_LED_PIN_NO,
                  on_board_led_high_is_on = ON_BOARD_LED_HIGH_IS_ON,
-                 pin_id_reset = PIN_ID_FOR_LORA_RESET,
+                 pin_id_reset = LORA_RESET,
                  blink_on_start = (2, 0.5, 0.5)):
                 
         super().__init__(pin_id_led,
@@ -115,44 +115,44 @@ class ESP32Controller(ESPController):
 
     def get_spi(self): 
 
-        try:
-            if CONFIG.SOFT_SPI:
-                spi_id = -1
-            else:
-                spi_id = 1
+        if config.CONFIG.SOFT_SPI:
+            spi_id = -1
+        else:
+            spi_id = 1
 
+        try:
             spi = SPI(spi_id, baudrate = 10000000, polarity = 0, phase = 0, bits = 8, firstbit = SPI.MSB,
-                      sck = Pin(self.PIN_ID_SCK, Pin.OUT, Pin.PULL_DOWN),
-                      mosi = Pin(self.PIN_ID_MOSI, Pin.OUT, Pin.PULL_UP),
-                      miso = Pin(self.PIN_ID_MISO, Pin.IN, Pin.PULL_UP))
+                      sck = Pin(self.LORA_SCK, Pin.OUT, Pin.PULL_DOWN),
+                      mosi = Pin(self.LORA_MOSI, Pin.OUT, Pin.PULL_UP),
+                      miso = Pin(self.LORA_MISO, Pin.IN, Pin.PULL_UP))
             spi.init()
 
         except Exception as e:
             print(e)
             if spi:
                 spi.deinit()
-                spi = None
             reset()  # in case SPI is already in use, need to reset.
-        
+            raise
+
         return spi
         
             
 class ESP8266Controller(ESPController):
 
     # LoRa config
-    PIN_ID_FOR_LORA_RESET = 4
+    LORA_RESET = 4
 
-    PIN_ID_FOR_LORA_SS = 15
-    PIN_ID_SCK = 14
-    PIN_ID_MOSI = 13
-    PIN_ID_MISO = 12
+    LORA_CS = 15
+    LORA_SCK = 14
+    LORA_MOSI = 13
+    LORA_MISO = 12
 
-    PIN_ID_FOR_LORA_DIO0 = 5
-    PIN_ID_FOR_LORA_DIO1 = None
-    PIN_ID_FOR_LORA_DIO2 = None
-    PIN_ID_FOR_LORA_DIO3 = None
-    PIN_ID_FOR_LORA_DIO4 = None
-    PIN_ID_FOR_LORA_DIO5 = None
+    LORA_DIO0= 5
+    LORA_DIO1 = None
+    LORA_DIO2 = None
+    LORA_DIO3 = None
+    LORA_DIO4 = None
+    LORA_DIO5 = None
 
 
     ON_BOARD_LED_PIN_NO = 2
@@ -162,7 +162,7 @@ class ESP8266Controller(ESPController):
     def __init__(self,
                  pin_id_led = ON_BOARD_LED_PIN_NO,
                  on_board_led_high_is_on = ON_BOARD_LED_HIGH_IS_ON,
-                 pin_id_reset = PIN_ID_FOR_LORA_RESET,
+                 pin_id_reset = LORA_RESET,
                  blink_on_start = (2, 0.5, 0.5)):
 
         super().__init__(pin_id_led,

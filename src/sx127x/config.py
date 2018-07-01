@@ -24,10 +24,10 @@ class Configuration:
     """
 
     IS_PC = False
-    IS_MICROPYTHON = (sys.implementation.name == 'micropython')
-    IS_ESP8266 = (os.uname().sysname == 'esp8266')
-    IS_ESP32 = (os.uname().sysname == 'esp32')
-    IS_TTGO_LORA_OLED = False
+    IS_MICROPYTHON = sys.implementation.name == 'micropython'
+    IS_ESP8266 = os.uname().sysname == 'esp8266'
+    IS_ESP32 = os.uname().sysname == 'esp32'
+    IS_TTGO_LORA_OLED = True
     IS_RPI = not (IS_MICROPYTHON or IS_PC)
     MILLISECOND = None
     CONTROLLER = None
@@ -49,8 +49,6 @@ class Configuration:
                 self.NODE_NAME = 'ESP8266_'
             if self.IS_ESP32:
                 self.NODE_NAME = 'ESP32_'
-                import esp
-                self.IS_TTGO_LORA_OLED = (esp.flash_size() > 5000000)
 
             self.NODE_EUI = self.mac2eui(uuid)
             self.NODE_NAME = self.NODE_NAME + uuid
@@ -88,4 +86,4 @@ class Configuration:
 if CONFIG is None:
     CONFIG = Configuration()
     if not CONFIG.CONTROLLER:
-        raise ImportError('Did not create a controller')
+        raise Exception('Did not create a controller')

@@ -30,12 +30,12 @@ def main():
            
     # controller.add_transceiver(transceiver,
                                # pin_id_ss = PIN_ID_FOR_LORA_SS,
-                               # pin_id_RxDone = PIN_ID_FOR_LORA_DIO0,
-                               # pin_id_RxTimeout = PIN_ID_FOR_LORA_DIO1,
-                               # pin_id_ValidHeader = PIN_ID_FOR_LORA_DIO2,
-                               # pin_id_CadDone = PIN_ID_FOR_LORA_DIO3,
-                               # pin_id_CadDetected = PIN_ID_FOR_LORA_DIO4,
-                               # pin_id_PayloadCrcError = PIN_ID_FOR_LORA_DIO5)                        
+                               # pin_id_RxDone = LORA_DIO0,
+                               # pin_id_RxTimeout = LORA_DIO1,
+                               # pin_id_ValidHeader = LORA_DIO2,
+                               # pin_id_CadDone = LORA_DIO3,
+                               # pin_id_CadDetected = LORA_DIO4,
+                               # pin_id_PayloadCrcError = LORA_DIO5)                        
     lora = controller.add_transceiver(sx127x.SX127x(name = 'LoRa'),
                                       pin_id_ss = config_lora.Controller.PIN_ID_FOR_LORA_SS,
                                       pin_id_RxDone = config_lora.Controller.PIN_ID_FOR_LORA_DIO0)

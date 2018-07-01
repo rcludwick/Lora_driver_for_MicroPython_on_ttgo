@@ -10,25 +10,25 @@ class BaseController:
     ON_BOARD_LED_HIGH_IS_ON = True
     GPIO_PINS = []
                  
-    PIN_ID_FOR_LORA_RESET = None
+    LORA_RESET = None
     
-    PIN_ID_FOR_LORA_SS = None 
-    PIN_ID_SCK = None 
-    PIN_ID_MOSI = None 
-    PIN_ID_MISO = None
+    LORA_CS = None
+    LORA_SCK = None
+    LORA_MOSI = None
+    LORA_MISO = None
                     
-    PIN_ID_FOR_LORA_DIO0 = None 
-    PIN_ID_FOR_LORA_DIO1 = None 
-    PIN_ID_FOR_LORA_DIO2 = None 
-    PIN_ID_FOR_LORA_DIO3 = None
-    PIN_ID_FOR_LORA_DIO4 = None
-    PIN_ID_FOR_LORA_DIO5 = None
+    LORA_DIO0 = None
+    LORA_DIO1 = None
+    LORA_DIO2 = None
+    LORA_DIO3 = None
+    LORA_DIO4 = None
+    LORA_DIO5 = None
      
     
     def __init__(self,
                  pin_id_led = ON_BOARD_LED_PIN_NO, 
                  on_board_led_high_is_on = ON_BOARD_LED_HIGH_IS_ON,
-                 pin_id_reset = PIN_ID_FOR_LORA_RESET, 
+                 pin_id_reset = LORA_RESET,
                  blink_on_start = (2, 0.5, 0.5)):                 
         
         self.pin_led = self.prepare_pin(pin_id_led)
@@ -42,13 +42,13 @@ class BaseController:
 
     def add_transceiver(self, 
                         transceiver, 
-                        pin_id_ss = PIN_ID_FOR_LORA_SS,
-                        pin_id_RxDone = PIN_ID_FOR_LORA_DIO0,
-                        pin_id_RxTimeout = PIN_ID_FOR_LORA_DIO1,
-                        pin_id_ValidHeader = PIN_ID_FOR_LORA_DIO2,
-                        pin_id_CadDone = PIN_ID_FOR_LORA_DIO3,     
-                        pin_id_CadDetected = PIN_ID_FOR_LORA_DIO4,
-                        pin_id_PayloadCrcError = PIN_ID_FOR_LORA_DIO5):
+                        pin_id_ss = LORA_CS,
+                        pin_id_RxDone = LORA_DIO0,
+                        pin_id_RxTimeout = LORA_DIO1,
+                        pin_id_ValidHeader = LORA_DIO2,
+                        pin_id_CadDone = LORA_DIO3,
+                        pin_id_CadDetected = LORA_DIO4,
+                        pin_id_PayloadCrcError = LORA_DIO5):
         
         transceiver.transfer = self.spi.transfer
         transceiver.blink_led = self.blink_led

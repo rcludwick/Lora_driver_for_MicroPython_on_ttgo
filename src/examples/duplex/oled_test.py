@@ -1,7 +1,8 @@
 from time import sleep
-from machine import unique_id, Pin, I2C
+from machine import unique_id, Pin
 import ubinascii
-import display_ssd1306_i2c
+from sx127x.controller import display_ssd1306_i2c
+
 
 def mac2eui(mac):
     mac = mac[0:6] + 'fffe' + mac[6:] 
@@ -22,8 +23,8 @@ print('EUI', get_eui())
 blink(16)
 Pin(15, Pin.OUT) 
 
-oled = display_ssd1306_i2c.Display(width = 128, height = 64, 
-                                   scl_pin_id = 15, sda_pin_id = 4, 
+oled = display_ssd1306_i2c.Display(width = 128, height = 64,
+                                   scl_pin_id = 15, sda_pin_id = 4,
                                    freq = 400000) 
 
 def show_packet(payload_string, rssi = None):

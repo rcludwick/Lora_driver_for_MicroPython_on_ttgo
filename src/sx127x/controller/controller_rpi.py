@@ -20,25 +20,25 @@ class Controller(controller.Controller):
 
     
     # LoRa config
-    PIN_ID_FOR_LORA_RESET = 5
+    LORA_RESET = 5
 
-    PIN_ID_FOR_LORA_SS = 8
-    PIN_ID_SCK = 11
-    PIN_ID_MOSI = 10
-    PIN_ID_MISO = 9
+    LORA_CS = 8
+    LORA_SCK = 11
+    LORA_MOSI = 10
+    LORA_MISO = 9
 
-    PIN_ID_FOR_LORA_DIO0 = 17
-    PIN_ID_FOR_LORA_DIO1 = None 
-    PIN_ID_FOR_LORA_DIO2 = None 
-    PIN_ID_FOR_LORA_DIO3 = None
-    PIN_ID_FOR_LORA_DIO4 = None
-    PIN_ID_FOR_LORA_DIO5 = None 
+    LORA_DIO0 = 17
+    LORA_DIO1 = None
+    LORA_DIO2 = None
+    LORA_DIO3 = None
+    LORA_DIO4 = None
+    LORA_DIO5 = None
     
 
     def __init__(self, 
                  pin_id_led = ON_BOARD_LED_PIN_NO, 
                  on_board_led_high_is_on = ON_BOARD_LED_HIGH_IS_ON,
-                 pin_id_reset = PIN_ID_FOR_LORA_RESET,
+                 pin_id_reset = LORA_RESET,
                  blink_on_start = (2, 0.5, 0.5)):
                 
         super().__init__(pin_id_led,
@@ -81,20 +81,19 @@ class Controller(controller.Controller):
             bus = 0
             device = 0
             spi.open(bus, device)            
-            spi.max_speed_hz = 10000000
-            spi.mode = 0b00
-            spi.lsbfirst = False
-                
+
         except Exception as e:
             print(e)
             GPIO.cleanup()
             if spi:
                 spi.close()
                 spi = None
-        
+
+        spi.max_speed_hz = 10000000
+        spi.mode = 0b00
+        spi.lsbfirst = False
         return spi
-        
-            
+
     # https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md
     # https://www.raspberrypi.org/forums/viewtopic.php?f=44&t=19489
     def prepare_spi(self, spi): 

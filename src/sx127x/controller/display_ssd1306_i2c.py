@@ -1,7 +1,7 @@
 # https://learn.adafruit.com/micropython-hardware-ssd1306-oled-display/software
 import time
 import machine 
-import ssd1306
+from display import ssd1306
 
 
 class Display:
