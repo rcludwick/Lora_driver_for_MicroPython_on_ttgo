@@ -2,8 +2,11 @@ import sys
 import os 
 import time
 
-CONFIG = None
 
+import machine
+import ubinascii
+
+CONFIG = None
 
 def millisecond():
     """
@@ -38,49 +41,32 @@ class Configuration:
 
     def __init__(self):
 
-        if self.IS_MICROPYTHON:
+        # Node Name
+        uuid = ubinascii.hexlify(machine.unique_id()).decode()
 
-            # Node Name
-            import machine
-            import ubinascii
-            uuid = ubinascii.hexlify(machine.unique_id()).decode()
+        if self.IS_ESP8266:
+            self.NODE_NAME = 'ESP8266_'
+        if self.IS_ESP32:
+            self.NODE_NAME = 'ESP32_'
 
-            if self.IS_ESP8266:
-                self.NODE_NAME = 'ESP8266_'
-            if self.IS_ESP32:
-                self.NODE_NAME = 'ESP32_'
+        self.NODE_EUI = self.mac2eui(uuid)
+        self.NODE_NAME = self.NODE_NAME + uuid
 
-            self.NODE_EUI = self.mac2eui(uuid)
-            self.NODE_NAME = self.NODE_NAME + uuid
+        # millisecond
+        self.MILLISECOND = time.ticks_ms
 
-            # millisecond
-            self.MILLISECOND = time.ticks_ms
-
-            # Controller
-            self.SOFT_SPI = None
-            if self.IS_TTGO_LORA_OLED:
-                from sx127x.controller.controller_esp_ttgo_lora_oled import TTGOController
-                self.SOFT_SPI = True
-                self.CONTROLLER = TTGOController
-            elif self.IS_ESP32:
-                from sx127x.controller.esp_controller import ESP32Controller
-                self.CONTROLLER = ESP32Controller
-            elif self.IS_ESP8266:
-                from sx127x.controller.esp_controller import ESP8266Controller
-                self.CONTROLLER = ESP8266Controller
-
-        if self.IS_RPI:
-
-            # Node Name
-            import socket
-            self.NODE_NAME = 'RPi_' + socket.gethostname()
-
-            # millisecond
-            self.MILLISECOND = lambda : time.time() * 1000
-
-            # Controller
-            from sx127x.controller.controller_rpi import Controller
-            self.CONTROLLER = Controller
+        # Controller
+        self.SOFT_SPI = None
+        if self.IS_TTGO_LORA_OLED:
+            from sx127x.controller.controller_esp_ttgo_lora_oled import TTGOController
+            self.SOFT_SPI = True
+            self.CONTROLLER = TTGOController
+        elif self.IS_ESP32:
+            from sx127x.controller.esp_controller import ESP32Controller
+            self.CONTROLLER = ESP32Controller
+        elif self.IS_ESP8266:
+            from sx127x.controller.esp_controller import ESP8266Controller
+            self.CONTROLLER = ESP8266Controller
 
 
 if CONFIG is None:
