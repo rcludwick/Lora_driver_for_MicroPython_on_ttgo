@@ -82,11 +82,11 @@ class SX127x:
         :param frequency:  e.g. "915E6"
         """
 
-        parameters = {'tx_power_level': 2, 'signal_bandwidth': 125E3,
+        parameters = {'frequency': frequency, 'tx_power_level': 2, 'signal_bandwidth': 125E3,
                       'spreading_factor': 8, 'coding_rate': 5, 'preamble_length': 8,
                       'implicitHeader': False, 'sync_word': 0x12, 'enable_CRC': False}
 
-        self._frequency = frequency
+        self.frequency = frequency
         parameters.update(**kwargs)
         self.name = name
         self.parameters = parameters 
