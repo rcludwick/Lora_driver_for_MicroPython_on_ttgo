@@ -3,17 +3,14 @@ import gc
 from sx127x.config import CONFIG
 
 
-
-
-
 class SX127x:
 
-    frfs = {'169E6': (42, 64, 0),
-            '433E6': (108, 64, 0),
-            '434E6': (108, 128, 0),
-            '866E6': (216, 128, 0),
-            '868E6': (217, 0, 0),
-            '915E6': (228, 192, 0)}
+    freqs = {'169E6': (42, 64, 0),
+             '433e6': (108, 64, 0),
+             '434E6': (108, 128, 0),
+             '866E6': (216, 128, 0),
+             '868E6': (217, 0, 0),
+             '915E6': (228, 192, 0)}
 
 
     PA_OUTPUT_RFO_PIN = 0
@@ -226,9 +223,9 @@ class SX127x:
     def setFrequency(self, frequency):
         self._frequency = frequency    
         
-        self.writeRegister(self.REG_FRF_MSB, self.frfs[frequency][0])
-        self.writeRegister(self.REG_FRF_MID, self.frfs[frequency][1])
-        self.writeRegister(self.REG_FRF_LSB, self.frfs[frequency][2])
+        self.writeRegister(self.REG_FRF_MSB, self.freqs[frequency][0])
+        self.writeRegister(self.REG_FRF_MID, self.freqs[frequency][1])
+        self.writeRegister(self.REG_FRF_LSB, self.freqs[frequency][2])
         
 
     def setSpreadingFactor(self, sf):
