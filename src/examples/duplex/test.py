@@ -36,7 +36,7 @@ def main():
                                # pin_id_CadDone = LORA_DIO3,
                                # pin_id_CadDetected = LORA_DIO4,
                                # pin_id_PayloadCrcError = LORA_DIO5)
-    lora = controller.add_transceiver(sx127x.SX127x(name = 'LoRa'),
+    lora = controller.add_transceiver(sx127x.SX127x(name = 'LoRa', frequency="915E6"),
                                       pin_id_ss = controller.LORA_CS,
                                       pin_id_RxDone = controller.LORA_DIO0)
     print('lora', lora)
