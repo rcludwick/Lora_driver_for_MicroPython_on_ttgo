@@ -80,14 +80,13 @@ class SX127x:
 
         parameters = {'frequency': 433E6, 'tx_power_level': 2, 'signal_bandwidth': 125E3,
                       'spreading_factor': 8, 'coding_rate': 5, 'preamble_length': 8,
-                      'implicitHeader': False, 'sync_word': 0x12, 'enable_CRC': False},
+                      'implicitHeader': False, 'sync_word': 0x12, 'enable_CRC': False}
 
         parameters.update(**kwargs)
         self.name = name
         self.parameters = parameters 
         self._on_receive = on_receive
-        self._lock = False
-        
+
      
     def init(self, **parameters):
         if parameters:
@@ -172,26 +171,11 @@ class SX127x:
         self.writeRegister(self.REG_PAYLOAD_LENGTH, currentLength + size)
         return size
 
-        
-    def aquire_lock(self, lock = False):        
-        if not CONFIG.IS_MICROPYTHON:  # MicroPython is single threaded, doesn't need lock.
-            if lock:
-                while self._lock: pass
-                self._lock = True
-            else:
-                self._lock = False
-            
-            
-    def println(self, string, implicitHeader = False):        
-        self.aquire_lock(True)  # wait until RX_Done, lock and begin writing.
-        
-        self.beginPacket(implicitHeader) 
+    def println(self, string, implicitHeader = False):
+        self.beginPacket(implicitHeader)
         self.write(string.encode())
         self.endPacket()  
 
-        self.aquire_lock(False) # unlock when done writing
-
-    
     def getIrqFlags(self):
         irqFlags = self.readRegister(self.REG_IRQ_FLAGS)
         self.writeRegister(self.REG_IRQ_FLAGS, irqFlags)
@@ -282,19 +266,7 @@ class SX127x:
     def setSyncWord(self, sw):
         self.writeRegister(self.REG_SYNC_WORD, sw)
          
-    
-    # def enable_Rx_Done_IRQ(self, enable = True):
-        # if enable:
-            # self.writeRegister(REG_IRQ_FLAGS_MASK, self.readRegister(REG_IRQ_FLAGS_MASK) & ~IRQ_RX_DONE_MASK)
-        # else:
-            # self.writeRegister(REG_IRQ_FLAGS_MASK, self.readRegister(REG_IRQ_FLAGS_MASK) | IRQ_RX_DONE_MASK)
-   
-   
-    # def dumpRegisters(self):
-        # for i in range(128):
-            # print("0x{0:02x}: {1:02x}".format(i, self.readRegister(i)))
 
-    
     def implicitHeaderMode(self, implicitHeaderMode = False):
         if self._implicitHeaderMode != implicitHeaderMode:  # set value only if different.
             self._implicitHeaderMode = implicitHeaderMode
@@ -328,18 +300,13 @@ class SX127x:
     # https://sourceforge.net/p/raspberry-gpio-python/wiki/Inputs/
     # http://raspi.tv/2013/how-to-use-interrupts-with-python-on-the-raspberry-pi-and-rpi-gpio-part-2
     def handleOnReceive(self, event_source):
-        self.aquire_lock(True)              # lock until TX_Done 
-        
+
         # irqFlags = self.getIrqFlags() should be 0x50
         if (self.getIrqFlags() & self.IRQ_PAYLOAD_CRC_ERROR_MASK) == 0:
             if self._on_receive:
                 payload = self.read_payload()                
-                self.aquire_lock(False)     # unlock when done reading  
-                
                 self._on_receive(self, payload)
-                
-        self.aquire_lock(False)             # unlock in any case.
-        
+
         
     def receivedPacket(self, size = 0):
         irqFlags = self.getIrqFlags()
