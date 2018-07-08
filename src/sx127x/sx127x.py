@@ -76,12 +76,17 @@ class SX127x:
     #   3.2 detach_irq()
     # 4. a function to blink on-board LED.
 
-    def __init__(self, name = 'SX127x', on_receive = None, **kwargs):
+    def __init__(self, frequency, name = 'SX127x', on_receive = None, **kwargs):
 
-        parameters = {'frequency': 433E6, 'tx_power_level': 2, 'signal_bandwidth': 125E3,
+        """
+        :param frequency:  e.g. "915E6"
+        """
+
+        parameters = {'tx_power_level': 2, 'signal_bandwidth': 125E3,
                       'spreading_factor': 8, 'coding_rate': 5, 'preamble_length': 8,
                       'implicitHeader': False, 'sync_word': 0x12, 'enable_CRC': False}
 
+        self._frequency = frequency
         parameters.update(**kwargs)
         self.name = name
         self.parameters = parameters 
