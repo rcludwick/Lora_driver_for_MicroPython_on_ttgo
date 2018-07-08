@@ -1,6 +1,6 @@
 from time import sleep
 
-            
+
 class BaseController:
 
     ON_BOARD_LED_PIN_NO = None
@@ -27,7 +27,7 @@ class BaseController:
                  on_board_led_high_is_on = ON_BOARD_LED_HIGH_IS_ON,
                  pin_id_reset = LORA_RESET,
                  blink_on_start = (2, 0.5, 0.5)):                 
-        
+
         self.pin_led = self.prepare_pin(pin_id_led)
         self.on_board_led_high_is_on = on_board_led_high_is_on
         self.pin_reset = self.prepare_pin(pin_id_reset)        
@@ -47,9 +47,7 @@ class BaseController:
                         pin_id_CadDetected = LORA_DIO4,
                         pin_id_PayloadCrcError = LORA_DIO5):
         
-        transceiver.transfer = self.spi.transfer
         transceiver.blink_led = self.blink_led
-        
         transceiver.pin_ss = self.prepare_pin(pin_id_ss)
         transceiver.pin_RxDone = self.prepare_irq_pin(pin_id_RxDone)
         transceiver.pin_RxTimeout = self.prepare_irq_pin(pin_id_RxTimeout)
@@ -101,7 +99,7 @@ class BaseController:
 
 
     def led_on(self, on = True):
-        self.pin_led.high() if self.on_board_led_high_is_on == on else self.pin_led.low()
+        self.pin_led.value(1) if self.on_board_led_high_is_on == on else self.pin_led.value(0)
             
 
     def blink_led(self, times = 1, on_seconds = 0.1, off_seconds = 0.1):
@@ -113,11 +111,11 @@ class BaseController:
             
 
     def reset_pin(self, pin, duration_low = 0.05, duration_high = 0.05):
-        pin.low()
+        pin.value(0)
         sleep(duration_low)
-        pin.high()
+        pin.value(1)
         sleep(duration_high)
         
         
     def __exit__(self): 
-        self.spi.close()        
+        self.spi.deinit()

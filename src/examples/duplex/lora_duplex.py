@@ -41,14 +41,9 @@ def send_message(lora, outgoing):
 
 def on_receive(lora, payload):
     lora.blink_led()   
-            
-    try:
-        payload_string = payload.decode()
-        rssi = lora.packetRssi()
-        print("*** Received message ***\n{}".format(payload_string))
-        if config.CONFIG.IS_TTGO_LORA_OLED:
-            lora.show_packet(payload_string, rssi)
-    except Exception as e:
-        print(e)
+    payload_string = payload.decode()
+    rssi = lora.packetRssi()
+    print("*** Received message ***\n{}".format(payload_string))
+    if config.CONFIG.IS_TTGO_LORA_OLED:
+        lora.show_packet(payload_string, rssi)
     print("with RSSI {}\n".format(rssi))
-    

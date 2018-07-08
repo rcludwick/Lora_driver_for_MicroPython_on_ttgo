@@ -26,52 +26,21 @@ class ESPController(base_controller.BaseController):
 
 
     def prepare_pin(self, pin_id, in_out = Pin.OUT):
-        if pin_id is not None:
+        if pin_id:
             pin = Pin(pin_id, in_out)
-            new_pin = ESPController.Mock()
-            new_pin.pin_id = pin_id
-            new_pin.value = pin.value
-
-            if in_out == Pin.OUT:
-                new_pin.low = lambda : pin.value(0)
-                new_pin.high = lambda : pin.value(1)
-            else:
-                new_pin.irq = pin.irq
-
-            return new_pin
+            return pin
+        return None
 
 
     def prepare_irq_pin(self, pin_id):
-        pin = self.prepare_pin(pin_id, Pin.IN)
-        if pin:
-            pin.set_handler_for_irq_on_rising_edge = lambda handler: pin.irq(handler = handler, trigger = Pin.IRQ_RISING)
-            pin.detach_irq = lambda : pin.irq(handler = None, trigger = 0)
-            return pin
-
+        return self.prepare_pin(pin_id, in_out=Pin.IN)
 
     def prepare_spi(self, spi):
         if spi:
-            new_spi = ESPController.Mock()
-
-            def transfer(pin_ss, address, value = 0x00):
-                response = bytearray(1)
-
-                pin_ss.low()
-
-                spi.write(bytes([address]))
-                spi.write_readinto(bytes([value]), response)
-
-                pin_ss.high()
-
-                return response
-
-            new_spi.transfer = transfer
-            new_spi.close = spi.deinit
-            return new_spi
-
+            return spi
 
     def __exit__(self):
-        self.spi.close()
+        self.spi.deinit()
 
 
 
@@ -177,6 +146,6 @@ class ESP8266Controller(ESPController):
 
         spi = SPI(spi_id, baudrate = 10000000, polarity = 0, phase = 0)
         spi.init()
-        return spi()
+        return spi
 
 

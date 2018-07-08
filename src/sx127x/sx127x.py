@@ -1,6 +1,7 @@
 from time import sleep 
 import gc
 from sx127x.config import CONFIG
+from machine import Pin
 
 
 class SX127x:
@@ -81,7 +82,7 @@ class SX127x:
     #   3.2 detach_irq()
     # 4. a function to blink on-board LED.
 
-    def __init__(self, frequency, name = 'SX127x', on_receive = None, **kwargs):
+    def __init__(self, frequency, spi, name = 'SX127x', on_receive = None, **kwargs):
 
         """
         :param frequency:  e.g. "915E6"
@@ -96,6 +97,7 @@ class SX127x:
         self.name = name
         self.parameters = parameters 
         self._on_receive = on_receive
+        self.spi = spi
 
      
     def init(self, **parameters):
@@ -193,7 +195,7 @@ class SX127x:
 
         
     def packetRssi(self):
-        return (self.readRegister(self.REG_PKT_RSSI_VALUE) - (164 if self._frequency < 868E6 else 157))
+        return (self.readRegister(self.REG_PKT_RSSI_VALUE) - (164 if float(self._frequency) < 868E6 else 157))
 
 
     def packetSnr(self):
@@ -277,16 +279,22 @@ class SX127x:
             config = modem_config_1 | 0x01 if implicitHeaderMode else modem_config_1 & 0xfe
             self.writeRegister(self.REG_MODEM_CONFIG_1, config)
        
-        
+
+    def attach_irq_handler(self, pin, method):
+        pin.irq(handler=method, trigger=Pin.IRQ_RISING)
+
+    def detach_irq_handler(self, pin):
+        pin.irq(handler=None, trigger=0)
+
     def onReceive(self, callback):
         self._on_receive = callback
         
         if self.pin_RxDone:
             if callback:
                 self.writeRegister(self.REG_DIO_MAPPING_1, 0x00)
-                self.pin_RxDone.set_handler_for_irq_on_rising_edge(handler = self.handleOnReceive)
+                self.attach_irq_handler(self.pin_RxDone, self.handleOnReceive)
             else:
-                self.pin_RxDone.detach_irq()
+                self.detach_irq_handler(self.pin_RxDone)
         
 
     def receive(self, size = 0):
@@ -347,7 +355,21 @@ class SX127x:
         
         self.collect_garbage()
         return bytes(payload)
-                        
+
+
+    def transfer(self, pin_ss, address, value=0x00):
+
+        response = bytearray(1)
+
+        pin_ss.value(0)
+
+        self.spi.write(bytes([address]))
+        self.spi.write_readinto(bytes([value]), response)
+
+        pin_ss.value(1)
+
+        return response
+
         
     def readRegister(self, address, byteorder = 'big', signed = False):
         response = self.transfer(self.pin_ss, address & 0x7f) 
