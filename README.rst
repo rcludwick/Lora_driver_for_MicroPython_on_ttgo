@@ -2,7 +2,7 @@
 Lora for TTGO
 =============
 
-Note:  It's possible this wil work for the RPi, ESP32 and ESP8266, but I'm not guaranteeing anything.
+Note:  It's possible this wil work for the ESP32 and ESP8266, but I'm not guaranteeing anything.
 
 
 Motivation
@@ -33,10 +33,3 @@ For the TTGO module, do the following.
 6.  Connect to REPL for the TTGO and run examples.duplex.test.main()
 
 Note: As of right now, you may need to run this twice.  I believe there's a weird import error of some kind going on.
-
-
-
-
-
-
-
