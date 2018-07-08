@@ -4,6 +4,9 @@ Lora for TTGO
 
 Note:  It's possible this wil work for the ESP32 and ESP8266, but I'm not guaranteeing anything.
 
+Checkout the "working" tag which is the last working version.
+
+
 
 Motivation
 ==========
