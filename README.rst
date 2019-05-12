@@ -2,12 +2,15 @@
 Lora for TTGO
 =============
 
-https://photos.app.goo.gl/cYgStJuGbR7BfsJC9
 
-Note:  It's possible this wil work for the ESP32 and ESP8266, but I'm not guaranteeing anything.
+https://photos.app.goo.gl/cYgStJuGbR7BfsJC9
 
 Checkout the "working" tag which is the last working version.
 
+NOTE
+====
+
+This repo is in rough shape, and I haven't had any time to show it some love.
 
 
 Motivation
