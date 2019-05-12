@@ -10,7 +10,7 @@ Checkout the "working" tag which is the last working version.
 NOTE
 ====
 
-This repo is in rough shape, and I haven't had any time to show it some love.
+This driver's implementation is in really rough shape, and I haven't had any time to show it some love.  I didn't write it but there are some weird-ish implementation details that need to be cleaned up before it should be used.
 
 
 Motivation
